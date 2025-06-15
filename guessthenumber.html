@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess the Number</title>
+  <style>
+    body {
+      background-color: #fbf5dc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .game-box {
+      text-align: center;
+      background-color: #efd4d4;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      max-width: 90%;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 220px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #f0eded;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #0b7dda;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      min-height: 24px;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .hint {
+      color: #ff9900;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-box">
+    <h1>🎯 Guess the Number (1-10)</h1>
+    <input type="number" id="numberInput" placeholder="Enter your guess" min="1" max="10" />
+    <br />
+    <button id="tryBtn" onclick="checkGuess()">Try</button>
+    <button id="resetBtn" onclick="startGame()" style="display: none;">🔁 Play Again</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    let randomNumber = 0;
+    let attempts = 0;
+    const maxAttempts = 3;
+
+    function startGame() {
+      randomNumber = Math.floor(Math.random() * 10) + 1;
+      attempts = 0;
+
+      document.getElementById('numberInput').style.display = 'inline-block';
+      document.getElementById('tryBtn').style.display = 'inline-block';
+      document.getElementById('resetBtn').style.display = 'none';
+      document.getElementById('numberInput').value = '';
+      document.getElementById('message').textContent = '';
+    }
+
+    function checkGuess() {
+      const userGuess = parseInt(document.getElementById('numberInput').value);
+      const message = document.getElementById('message');
+
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 10) {
+        message.textContent = "⚠️ Please enter a number between 1 and 10.";
+        message.className = 'error';
+        return;
+      }
+
+      attempts++;
+
+      if (userGuess === randomNumber) {
+        message.textContent = "🎉 Winner!";
+        message.className = 'success';
+        endGame();
+      } else if (attempts >= maxAttempts) {
+        message.textContent = `❌ Game Over! The number was ${randomNumber}`;
+        message.className = 'error';
+        endGame();
+      } else {
+        message.textContent = userGuess < randomNumber
+          ? "Hint: Try a bigger number 🔼"
+          : "Hint: Try a smaller number 🔽";
+        message.className = 'hint';
+        document.getElementById('numberInput').value = '';
+      }
+    }
+
+    function endGame() {
+      document.getElementById('numberInput').style.display = 'none';
+      document.getElementById('tryBtn').style.display = 'none';
+      document.getElementById('resetBtn').style.display = 'inline-block';
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
